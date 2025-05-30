@@ -1,0 +1,52 @@
+;******************************************************************************* 
+; CALCULA EL PRODUCTO DEL FACTORIAL DE DOS NUMEROS QUE SE 
+; ENCUENTRAN EN LAS POSICIONES DE MEMORIA 0 Y 1 DEL SEGMENTO DE 
+; DATOS. EL VALOR DE CADA NUMERO DEBE SER INFERIOR A 9. EL RESULTADO 
+; SE ALMACENA EN DOS PALABRAS DEL SEGMENTO EXTRA, EN LA PRIMERA 
+; PALABRA EL MENOS SIGNIFICATIVO Y EN LA SEGUNDA EL MAS 
+; SIGNIFICATIVO. SE UTILIZA UNA RUTINA PARA CALCULAR EL FACTORIAL. 
+;*******************************************************************************
+
+; DEFINICION DEL SEGMENTO DE CODIGO 
+
+_TEXT    SEGMENT BYTE PUBLIC 'CODE'
+    ASSUME CS:_TEXT
+
+; COMIENZO DEL PROCEDIMIENTO PRINCIPAL 
+
+;_______________________________________________________________ 
+; SUBRUTINA PARA CALCULAR EL FACTORIAL DE UN NUMERO 
+; ENTRADA CL=NUMERO 
+; SALIDA AX=RESULTADO, DX=0 YA QUE CL<=9 
+;_______________________________________________________________ 
+
+PUBLIC _factor
+
+_factor PROC FAR 
+	PUSH BP
+	MOV BP, SP
+	PUSH BX
+	MOV BX, [BP+6]
+	CMP BX, 1
+	si:
+		JNE altra
+		MOV AX, 1
+		JMP fi
+	altra: 
+		MOV AX, BX
+		DEC AX
+		PUSH AX
+		CALL _factor
+		POP CX
+		MUL BX
+	fi:
+		POP BX
+		POP BP
+		RET
+
+_factor ENDP 
+
+; FIN DEL SEGMENTO DE CODIGO 
+_TEXT ENDS 
+END 
+
